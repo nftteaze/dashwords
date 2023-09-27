@@ -1,0 +1,64 @@
+/* LeaderboardScreen.css */
+
+/* Style for the leaderboard screen container */
+.leaderboard-screen-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Make the screen full viewport height */
+    background-color: rgb(56, 55, 55);
+    color: rgb(251, 248, 248);
+    padding: 20px; /* Add padding for spacing */
+  }
+  
+  /* Style for the leaderboard title */
+  .leaderboard-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the leaderboard table */
+  .leaderboard-table {
+    width: 100%; /* Full width */
+    border-collapse: collapse; /* Remove cell spacing */
+    margin-top: 20px; /* Spacing above the table */
+  }
+  
+  /* Style for the table header row */
+  .leaderboard-table th {
+    background-color: #22CD9B; /* Header background color */
+    color: rgb(5, 5, 5); /* Header text color */
+    font-size: 1.5rem; /* Font size for header */
+    font-weight: bold; /* Bold text */
+    padding: 10px; /* Padding for header cells */
+    text-align: left; /* Left-align text in header cells */
+  }
+  
+  /* Style for alternating rows */
+  .leaderboard-table tr:nth-child(even) {
+    background-color: #1B9A76; /* Alternate row background color */
+  }
+  
+  /* Style for table cells */
+  .leaderboard-table td {
+    padding: 10px; /* Padding for cells */
+  }
+  
+  /* Style for the back button */
+  .back-button {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background-color: #22CD9B;
+    color: rgb(5, 5, 5);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Spacing above the button */
+  }
+  
+  /* Add a hover effect */
+  .back-button:hover {
+    background-color: #1B9A76;
+  }
+  

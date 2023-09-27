@@ -1,0 +1,49 @@
+.start-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Make the menu full viewport height */
+  background-color: rgb(56, 55, 55);
+  color: rgb(251, 248, 248);
+  padding: 20px; /* Add padding for spacing */
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  color: #22CD9B;
+}
+
+.login-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-button,
+.start-button {
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  background-color: #22CD9B;
+  color: rgb(5, 5, 5);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Add a hover effect */
+.login-button:hover,
+.start-button:hover {
+  background-color: #1B9A76;
+}

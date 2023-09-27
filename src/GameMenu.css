@@ -1,0 +1,82 @@
+/* GameMenu.css */
+.game-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgb(73, 72, 72);
+    color: white;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .word-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  
+  /* Style for answered rows (with color logic) */
+  .word-grid.answered {
+    opacity: 0.5; /* Adjust opacity for answered rows */
+  }
+  
+  input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: #333;
+    color: white;
+    border: none;
+  }
+  
+  .restart-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background-color: #22CD9B;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Add a hover effect for the restart button */
+  .restart-button:hover {
+    background-color: #1B9A76;
+  }
+  
+  .submit-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background-color: #22CD9B;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Add a hover effect for the submit button */
+  .submit-button:hover {
+    background-color: #1B9A76;
+  }
+  
+  .selected-word {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .game-over-message {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FF6B6B; /* Red color for game over message */
+  }
+  

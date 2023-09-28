@@ -4,14 +4,17 @@ import wordList from './wordList';
 import Leaderboard from './Leaderboard'; // Import the Leaderboard component
 import { useNavigate } from 'react-router-dom';
 import guessWordsArray from './GuessWords';
+import Confetti from 'react-confetti';
 
 function GameMenu() {
+
   const [selectedWord, setSelectedWord] = useState('');
   const [feedback, setFeedback] = useState(['', '', '', '', '']);
   const [guesses, setGuesses] = useState([['', '', '', '', '']]);
   const [guessCount, setGuessCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [points, setPoints] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const inputRefs = useRef([]);
 
@@ -32,14 +35,21 @@ function GameMenu() {
       newInput[index] = value.toUpperCase();
       newGuesses[row] = newInput;
       setGuesses(newGuesses);
-
-      if (index < newInput.length - 1) {
+  
+      if (value === '' && index > 0) {
+        // If the value is empty and the index is greater than 0 (a letter is deleted)
+        if (inputRefs.current[row][index - 1]) {
+          inputRefs.current[row][index - 1].focus();
+          inputRefs.current[row][index - 1].select(); // Select the previous input
+        }
+      } else if (index < newInput.length - 1) {
         if (inputRefs.current[row][index + 1]) {
           inputRefs.current[row][index + 1].focus();
         }
       }
     }
   };
+  
 
   const handleRestart = () => {
     setGuesses([['', '', '', '', '']]);
@@ -56,23 +66,31 @@ function GameMenu() {
     if (gameOver || guesses[row].some(letter => letter === '')) return; // Don't allow submissions if the game is over or if any box is empty
     const guess = guesses[row].join('').toUpperCase(); // Convert guess to uppercase
     const correctWord = selectedWord;
-
+  
     // Add these console.log statements
-  console.log('guessWordsArray:', guessWordsArray);
-  console.log('guess:', guess);
+    console.log('guessWordsArray:', guessWordsArray);
+    console.log('guess:', guess);
   
     if (!guessWordsArray.includes(guess.toLowerCase())) {
       // Display a message to the user
       alert('This is not a real word.');
       return;
     }
-    
   
     // Check if the guess is correct
     if (guess === correctWord) {
       // You've guessed the word correctly
       setGameOver(true);
       setPoints((5 - guessCount) * 5);
+      setShowConfetti(true);
+  
+      // Create a newFeedback array with all 'green' values for the entire row
+      const newFeedback = [...feedback];
+      for (let i = row * 5; i < (row + 1) * 5; i++) {
+        newFeedback[i] = 'green';
+      }
+  
+      setFeedback(newFeedback);
       return;
     }
   
@@ -123,6 +141,7 @@ function GameMenu() {
   };
   
   
+  
   const handleKeyPress = (row, e) => {
     if (e.key === 'Enter') {
       handleSubmit(row);
@@ -163,7 +182,22 @@ function GameMenu() {
         {gameOver ? (
           <div>
             {points > 0 ? (
-              <p>Congratulations! You've won {points} points!</p>
+              <div>
+                <p>Congratulations! You've won {points} points!</p>
+                {showConfetti && (
+  <Confetti
+    width={window.innerWidth}
+    height={600} // You can adjust the height as needed
+    numberOfPieces={400} // Increased the number of pieces to 400
+    recycle={false}
+    colors={['#FF5733', '#33FF57', '#5733FF']}
+    gravity={0.5}
+    wind={0} // Set wind to 0
+  />
+)}
+
+
+              </div>
             ) : (
               <p>Sorry, you lost. The word was: {selectedWord}</p>
             )}
@@ -179,18 +213,17 @@ function GameMenu() {
           </div>
         ) : (
           <div>
-            
             <button
               className="submit-button"
               onClick={() => {
                 const lastGuess = guesses[guesses.length - 1];
-                if (lastGuess.every(letter => letter !== '')) {
+                if (lastGuess.every((letter) => letter !== '')) {
                   handleSubmit(guesses.length - 1);
                 }
               }}
               disabled={
                 guessCount === 4 &&
-                guesses[guesses.length - 1].some(letter => letter === '')
+                guesses[guesses.length - 1].some((letter) => letter === '')
               }
             >
               Submit
@@ -198,11 +231,8 @@ function GameMenu() {
           </div>
         )}
       </div>
-
-      {/* Conditionally render the leaderboard */}
-      {showLeaderboard && <Leaderboard />}
     </div>
   );
 }
 
-export default GameMenu;
+export default GameMenu

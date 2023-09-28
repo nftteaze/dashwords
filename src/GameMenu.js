@@ -65,8 +65,6 @@ function GameMenu() {
     }
   };
   
-  
-
   const handleRestart = () => {
     setGuesses([['', '', '', '', '']]);
     const randomIndex = Math.floor(Math.random() * wordList.length);

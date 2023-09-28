@@ -1,37 +1,15 @@
-// Login.js
-import React, { useState } from 'react';
+import React from 'react';
+import './Login.css'; // Import your Login CSS
 
-function Login({ onLogin }) {
-  const [memberNumber, setMemberNumber] = useState('');
-  const [nickname, setNickname] = useState('');
-
-  const handleLogin = () => {
-    // Validate memberNumber and nickname, and check for AD prefix
-    if (memberNumber.startsWith('AD')) {
-      // Perform any additional validation if needed
-      // If validation is successful, call the onLogin function with the provided data
-      onLogin({ memberNumber, nickname });
-    } else {
-      alert('Invalid Member Number. It should start with AD.');
-    }
-  };
-
+function Login() {
   return (
-    <div className="login">
-      <h2>Login</h2>
-      <input
-        type="text"
-        placeholder="AssetDash Member Number"
-        value={memberNumber}
-        onChange={(e) => setMemberNumber(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Nickname"
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div className="login-container">
+      <a
+        href="http://localhost:53134/auth/discord" // Update this URL if needed
+        className="discord-signin-button"
+      >
+        Login with Discord
+      </a>
     </div>
   );
 }

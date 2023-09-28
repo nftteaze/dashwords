@@ -46,13 +46,15 @@
 
 /* Style for the "Close" button */
 .close-button {
-  background-color: #f44336; /* Red background color */
-  color: #fff; /* Text color */
-  border: none; /* Remove borders */
-  border-radius: 5px; /* Rounded corners */
-  padding: 10px 20px; /* Padding for the button */
-  cursor: pointer; /* Cursor on hover */
-  margin-top: 10px; /* Spacing above the button */
+  margin-top: 20px; 
+  padding: 10px 20px; 
+  font-size: 1.5rem;
+  background-color: #22CD9B;
+  color: rgb(2, 2, 2);
+  border: none; 
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Style for the "Close" button on hover */
@@ -62,15 +64,15 @@
 
 /* Style for the "Leaderboard" button */
 .leaderboard-button {
-  margin-top: 20px; /* Adjust the spacing above the button as needed */
-  padding: 10px 20px; /* Button padding */
-  font-size: 1.5rem; /* Button font size */
-  background-color: #22CD9B; /* Button background color */
-  color: white; /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  cursor: pointer; /* Cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth background color transition */
+  margin-top: 20px; 
+  padding: 10px 20px; 
+  font-size: 1.5rem;
+  background-color: #22CD9B;
+  color: rgb(2, 2, 2);
+  border: none; 
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 /* Style for the "Leaderboard" button on hover */

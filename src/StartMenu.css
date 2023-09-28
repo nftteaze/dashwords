@@ -23,6 +23,10 @@
   margin-top: 20px;
 }
 
+.login-container a {
+  text-decoration: none; /* Remove text underline */
+}
+
 .login-container input {
   width: 100%;
   padding: 10px;
@@ -33,17 +37,52 @@
 
 .login-button,
 .start-button {
-  padding: 10px 20px;
-  font-size: 1.5rem;
-  background-color: #22CD9B;
-  color: rgb(5, 5, 5);
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  margin-top: 20px; /* Adjust the spacing above the button as needed */
+  padding: 10px 20px; /* Button padding */
+  font-size: 1.5rem; /* Button font size */
+  background-color: #22CD9B; /* Button background color */
+  color: rgb(2, 2, 2); /* Button text color */
+  border: none; /* Remove button border */
+  border-radius: 5px; /* Button border radius */
+  cursor: pointer; /* Cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
 }
 
 /* Add a hover effect */
 .login-button:hover,
 .start-button:hover {
-  background-color: #1B9A76;
+  background-color: #1B9A76; /* Hover background color */
+}
+
+/* Additional styles for the "How to Play" section */
+.how-to-play-box {
+  background-color: #333; /* Background color for the how-to-play box */
+  padding: 20px; /* Add padding to the box */
+  border-radius: 10px; /* Rounded corners for the box */
+  margin-top: 20px; /* Adjust the spacing above the box as needed */
+}
+
+.how-to-play-content {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.tile {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border: 1px solid #000;
+}
+
+.gray {
+  background-color: gray;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.green {
+  background-color: green;
 }

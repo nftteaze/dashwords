@@ -3,6 +3,7 @@ import './GameMenu.css';
 import wordList from './wordList';
 import Leaderboard from './Leaderboard'; // Import the Leaderboard component
 import { useNavigate } from 'react-router-dom';
+import guessWordsArray from './GuessWords';
 
 function GameMenu() {
   const [selectedWord, setSelectedWord] = useState('');
@@ -53,9 +54,20 @@ function GameMenu() {
 
   const handleSubmit = (row) => {
     if (gameOver || guesses[row].some(letter => letter === '')) return; // Don't allow submissions if the game is over or if any box is empty
-    const guess = guesses[row].join('');
+    const guess = guesses[row].join('').toUpperCase(); // Convert guess to uppercase
     const correctWord = selectedWord;
 
+    // Add these console.log statements
+  console.log('guessWordsArray:', guessWordsArray);
+  console.log('guess:', guess);
+  
+    if (!guessWordsArray.includes(guess.toLowerCase())) {
+      // Display a message to the user
+      alert('This is not a real word.');
+      return;
+    }
+    
+  
     // Check if the guess is correct
     if (guess === correctWord) {
       // You've guessed the word correctly
@@ -63,44 +75,43 @@ function GameMenu() {
       setPoints((5 - guessCount) * 5);
       return;
     }
-
-    // Create an array to keep track of letters that have been matched
-    const matchedIndices = [];
-
+  
     // Initialize newFeedback for the current row
     const newFeedback = [...feedback];
     for (let i = row * 5; i < (row + 1) * 5; i++) {
       newFeedback[i] = '';
     }
-
+  
+    const matchedIndices = Array(correctWord.length).fill(false);
+  
     // Check for correct letters in the correct position (green)
     for (let i = 0; i < correctWord.length; i++) {
       if (guess[i] === correctWord[i]) {
         newFeedback[i + row * 5] = 'green';
-        matchedIndices.push(i);
+        matchedIndices[i] = true;
       }
     }
-
+  
     // Check for correct letters in the wrong position (orange)
     for (let i = 0; i < correctWord.length; i++) {
-      if (
-        guess[i] !== correctWord[i] &&
-        correctWord.includes(guess[i]) &&
-        !matchedIndices.includes(i)
-      ) {
-        newFeedback[i + row * 5] = 'orange';
+      if (!matchedIndices[i] && guess.includes(correctWord[i])) {
+        const indexInGuess = guess.indexOf(correctWord[i]);
+        if (newFeedback[indexInGuess + row * 5] !== 'green') {
+          newFeedback[indexInGuess + row * 5] = 'orange';
+          matchedIndices[i] = true;
+        }
       }
     }
-
+  
     // Check for letters not in the word (gray)
     for (let i = 0; i < guess.length; i++) {
-      if (!correctWord.includes(guess[i])) {
+      if (!matchedIndices[i] && !correctWord.includes(guess[i])) {
         newFeedback[i + row * 5] = '';
       }
     }
-
+  
     setFeedback(newFeedback);
-
+  
     if (guessCount + 1 < 5) {
       // Only add a new row if all boxes in the current row are filled
       setGuesses([...guesses, ['', '', '', '', '']]);
@@ -110,7 +121,8 @@ function GameMenu() {
       setGameOver(true);
     }
   };
-
+  
+  
   const handleKeyPress = (row, e) => {
     if (e.key === 'Enter') {
       handleSubmit(row);

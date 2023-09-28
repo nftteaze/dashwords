@@ -32,23 +32,39 @@ function GameMenu() {
     if (!gameOver) {
       const newGuesses = [...guesses];
       const newInput = [...guesses[row]];
-      newInput[index] = value.toUpperCase();
+  
+      if (value === '') {
+        // Handle delete key press
+        if (index > 0) {
+          newInput[index] = ''; // Clear the current input
+          inputRefs.current[row][index - 1].focus(); // Focus on the previous input
+        } else if (index === 0 && row > 0) {
+          // Clear the last character in the previous row's last box
+          const prevRow = row - 1;
+          const lastIndex = newGuesses[prevRow].length - 1;
+          newGuesses[prevRow][lastIndex] = '';
+          if (inputRefs.current[prevRow][lastIndex]) {
+            inputRefs.current[prevRow][lastIndex].focus();
+          }
+        } else if (index === 0 && row === 0) {
+          // Clear the first character of the first row
+          newInput[index] = '';
+        }
+      } else {
+        newInput[index] = value.toUpperCase();
+      }
+  
       newGuesses[row] = newInput;
       setGuesses(newGuesses);
   
-      if (value === '' && index > 0) {
-        // If the value is empty and the index is greater than 0 (a letter is deleted)
-        if (inputRefs.current[row][index - 1]) {
-          inputRefs.current[row][index - 1].focus();
-          inputRefs.current[row][index - 1].select(); // Select the previous input
-        }
-      } else if (index < newInput.length - 1) {
+      if (index < newInput.length - 1 && value !== '') {
         if (inputRefs.current[row][index + 1]) {
           inputRefs.current[row][index + 1].focus();
         }
       }
     }
   };
+  
   
 
   const handleRestart = () => {

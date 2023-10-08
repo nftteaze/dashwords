@@ -28,42 +28,45 @@ function GameMenu() {
     setSelectedWord(randomWord);
   }, []);
 
-  const handleInput = (row, index, value) => {
-    if (!gameOver) {
-      const newGuesses = [...guesses];
-      const newInput = [...guesses[row]];
-  
-      if (value === '') {
-        // Handle delete key press
-        if (index > 0) {
-          newInput[index] = ''; // Clear the current input
-          inputRefs.current[row][index - 1].focus(); // Focus on the previous input
-        } else if (index === 0 && row > 0) {
-          // Clear the last character in the previous row's last box
-          const prevRow = row - 1;
-          const lastIndex = newGuesses[prevRow].length - 1;
-          newGuesses[prevRow][lastIndex] = '';
-          if (inputRefs.current[prevRow][lastIndex]) {
-            inputRefs.current[prevRow][lastIndex].focus();
-          }
-        } else if (index === 0 && row === 0) {
-          // Clear the first character of the first row
-          newInput[index] = '';
+const [submittedGuesses, setSubmittedGuesses] = useState([]); // State to store submitted guesses
+
+const handleInput = (row, index, value) => {
+  if (!gameOver && !guesses.isSubmitted && row === guessCount) {
+    const newGuesses = [...guesses];
+    const newInput = [...guesses[row]];
+
+    if (value === '') {
+      // Handle delete key press
+      if (index > 0) {
+        newInput[index] = ''; // Clear the current input
+        inputRefs.current[row][index - 1].focus(); // Focus on the previous input
+      } else if (index === 0 && row > 0) {
+        // Clear the last character in the previous row's last box
+        const prevRow = row - 1;
+        const lastIndex = newGuesses[prevRow].length - 1;
+        newGuesses[prevRow][lastIndex] = '';
+        if (inputRefs.current[prevRow][lastIndex]) {
+          inputRefs.current[prevRow][lastIndex].focus();
         }
-      } else {
-        newInput[index] = value.toUpperCase();
+      } else if (index === 0 && row === 0 && newInput[index] !== '') {
+        // Clear the first character of the first row if it's not empty
+        newInput[index] = '';
       }
-  
-      newGuesses[row] = newInput;
-      setGuesses(newGuesses);
-  
-      if (index < newInput.length - 1 && value !== '') {
-        if (inputRefs.current[row][index + 1]) {
-          inputRefs.current[row][index + 1].focus();
-        }
+    } else {
+      newInput[index] = value.toUpperCase();
+    }
+
+    newGuesses[row] = newInput;
+    setGuesses(newGuesses);
+
+    if (index < newInput.length - 1 && value !== '') {
+      if (inputRefs.current[row][index + 1]) {
+        inputRefs.current[row][index + 1].focus();
       }
     }
-  };
+  }
+};
+
   
   const handleRestart = () => {
     setGuesses([['', '', '', '', '']]);
@@ -173,7 +176,6 @@ function GameMenu() {
             <input
               key={index}
               type="text"
-              value={letter}
               onChange={(e) => handleInput(rowIndex, index, e.target.value)}
               maxLength={1}
               ref={(inputRef) => {

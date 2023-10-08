@@ -3,10 +3,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Make the menu full viewport height */
-  background-color: rgb(56, 55, 55);
+  height: 100vh;
+  background-color: rgb(0, 0, 0);
   color: rgb(251, 248, 248);
-  padding: 20px; /* Add padding for spacing */
+  padding: 0px;
 }
 
 .title {
@@ -24,7 +24,7 @@
 }
 
 .login-container a {
-  text-decoration: none; /* Remove text underline */
+  text-decoration: none;
 }
 
 .login-container input {
@@ -35,36 +35,56 @@
   border-radius: 5px;
 }
 
-.login-button,
-.start-button {
-  margin-top: 20px; /* Adjust the spacing above the button as needed */
-  padding: 10px 20px; /* Button padding */
-  font-size: 1.5rem; /* Button font size */
-  background-color: #22CD9B; /* Button background color */
-  color: rgb(2, 2, 2); /* Button text color */
-  border: none; /* Remove button border */
-  border-radius: 5px; /* Button border radius */
-  cursor: pointer; /* Cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth background color transition */
+/* Common button styles */
+.button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  color: rgb(2, 2, 2);
+  background-color: #22CD9B;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
 }
 
-/* Add a hover effect */
-.login-button:hover,
-.start-button:hover {
-  background-color: #1B9A76; /* Hover background color */
+.button::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, #22CD9B, #1B9A76);
+  z-index: -1;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* Additional styles for the "How to Play" section */
+.button:hover::before {
+  opacity: 1;
+}
+
+/* Apply the common button styles to both Start Game and Submit buttons */
+.start-button,
+.submit-button {
+  /* Additional specific styles if needed */
+}
+
 .how-to-play-box {
-  background-color: #333; /* Background color for the how-to-play box */
-  padding: 20px; /* Add padding to the box */
-  border-radius: 10px; /* Rounded corners for the box */
-  margin-top: 20px; /* Adjust the spacing above the box as needed */
+  background-color: #333;
+  padding: 0px;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .how-to-play-content {
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   color: #fff;
+  text-align: left;
 }
 
 .tile {

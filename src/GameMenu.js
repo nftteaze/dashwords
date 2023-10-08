@@ -67,17 +67,26 @@ const handleInput = (row, index, value) => {
   }
 };
 
-  
-  const handleRestart = () => {
-    setGuesses([['', '', '', '', '']]);
-    const randomIndex = Math.floor(Math.random() * wordList.length);
-    const randomWord = wordList[randomIndex].toUpperCase();
-    setSelectedWord(randomWord);
-    setFeedback(['', '', '', '', '']);
-    setGuessCount(0);
-    setGameOver(false);
-    setPoints(0);
-  };
+const handleRestart = () => {
+  // Reset game-related state variables to their initial values
+  setGuesses([Array(5).fill('')]); // Reset guesses to one row of empty strings
+  setFeedback(Array(25).fill(''));
+  setGuessCount(0);
+  setGameOver(false);
+  setShowConfetti(false);
+
+  // Reset input field values
+  inputRefs.current.forEach((row, rowIndex) => {
+    row.forEach((inputRef, columnIndex) => {
+      if (inputRef && rowIndex === 0) {
+        inputRef.value = ''; // Clear the input box value only for the first row
+      }
+    });
+  });
+};
+
+
+
 
   const handleSubmit = (row) => {
     if (gameOver || guesses[row].some(letter => letter === '')) return; // Don't allow submissions if the game is over or if any box is empty

@@ -7,7 +7,6 @@ import guessWordsArray from './GuessWords';
 import Confetti from 'react-confetti';
 
 function GameMenu() {
-
   const [selectedWord, setSelectedWord] = useState('');
   const [feedback, setFeedback] = useState(['', '', '', '', '']);
   const [guesses, setGuesses] = useState([['', '', '', '', '']]);
@@ -17,9 +16,7 @@ function GameMenu() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   const inputRefs = useRef([]);
-
   const [showLeaderboard, setShowLeaderboard] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,115 +25,97 @@ function GameMenu() {
     setSelectedWord(randomWord);
   }, []);
 
-const [submittedGuesses, setSubmittedGuesses] = useState([]); // State to store submitted guesses
+  const [submittedGuesses, setSubmittedGuesses] = useState([]);
 
-const handleInput = (row, index, value) => {
-  if (!gameOver && !guesses.isSubmitted && row === guessCount) {
-    const newGuesses = [...guesses];
-    const newInput = [...guesses[row]];
+  const handleInput = (row, index, value) => {
+    if (!gameOver && !guesses.isSubmitted && row === guessCount) {
+      const newGuesses = [...guesses];
+      const newInput = [...guesses[row]];
 
-    if (value === '') {
-      // Handle delete key press
-      if (index > 0) {
-        newInput[index] = ''; // Clear the current input
-        inputRefs.current[row][index - 1].focus(); // Focus on the previous input
-      } else if (index === 0 && row > 0) {
-        // Clear the last character in the previous row's last box
-        const prevRow = row - 1;
-        const lastIndex = newGuesses[prevRow].length - 1;
-        newGuesses[prevRow][lastIndex] = '';
-        if (inputRefs.current[prevRow][lastIndex]) {
-          inputRefs.current[prevRow][lastIndex].focus();
+      if (value === '') {
+        // Handle delete key press
+        if (index > 0) {
+          newInput[index] = '';
+          inputRefs.current[row][index - 1].focus();
+        } else if (index === 0 && row > 0) {
+          const prevRow = row - 1;
+          const lastIndex = newGuesses[prevRow].length - 1;
+          newGuesses[prevRow][lastIndex] = '';
+          if (inputRefs.current[prevRow][lastIndex]) {
+            inputRefs.current[prevRow][lastIndex].focus();
+          }
+        } else if (index === 0 && row === 0 && newInput[index] !== '') {
+          newInput[index] = '';
         }
-      } else if (index === 0 && row === 0 && newInput[index] !== '') {
-        // Clear the first character of the first row if it's not empty
-        newInput[index] = '';
+      } else {
+        newInput[index] = value.toUpperCase();
       }
-    } else {
-      newInput[index] = value.toUpperCase();
-    }
 
-    newGuesses[row] = newInput;
-    setGuesses(newGuesses);
+      newGuesses[row] = newInput;
+      setGuesses(newGuesses);
 
-    if (index < newInput.length - 1 && value !== '') {
-      if (inputRefs.current[row][index + 1]) {
-        inputRefs.current[row][index + 1].focus();
+      if (index < newInput.length - 1 && value !== '') {
+        if (inputRefs.current[row][index + 1]) {
+          inputRefs.current[row][index + 1].focus();
+        }
       }
     }
-  }
-};
+  };
 
-const handleRestart = () => {
-  // Reset game-related state variables to their initial values
-  setGuesses([Array(5).fill('')]); // Reset guesses to one row of empty strings
-  setFeedback(Array(25).fill(''));
-  setGuessCount(0);
-  setGameOver(false);
-  setShowConfetti(false);
+  const handleRestart = () => {
+    setGuesses([Array(5).fill('')]);
+    setFeedback(Array(25).fill(''));
+    setGuessCount(0);
+    setGameOver(false);
+    setShowConfetti(false);
 
-  // Reset input field values
-  inputRefs.current.forEach((row, rowIndex) => {
-    row.forEach((inputRef, columnIndex) => {
-      if (inputRef && rowIndex === 0) {
-        inputRef.value = ''; // Clear the input box value only for the first row
-      }
+    inputRefs.current.forEach((row, rowIndex) => {
+      row.forEach((inputRef, columnIndex) => {
+        if (inputRef && rowIndex === 0) {
+          inputRef.value = '';
+        }
+      });
     });
-  });
-};
-
-
-
+  };
 
   const handleSubmit = (row) => {
-    if (gameOver || guesses[row].some(letter => letter === '')) return; // Don't allow submissions if the game is over or if any box is empty
-    const guess = guesses[row].join('').toUpperCase(); // Convert guess to uppercase
+    if (gameOver || guesses[row].some((letter) => letter === '')) return;
+    const guess = guesses[row].join('').toUpperCase();
     const correctWord = selectedWord;
-  
-    // Add these console.log statements
-    console.log('guessWordsArray:', guessWordsArray);
-    console.log('guess:', guess);
-  
+
     if (!guessWordsArray.includes(guess.toLowerCase())) {
-      // Display a message to the user
       alert('This is not a real word.');
       return;
     }
-  
-    // Check if the guess is correct
+
     if (guess === correctWord) {
-      // You've guessed the word correctly
       setGameOver(true);
       setPoints((5 - guessCount) * 5);
       setShowConfetti(true);
-  
-      // Create a newFeedback array with all 'green' values for the entire row
+
       const newFeedback = [...feedback];
       for (let i = row * 5; i < (row + 1) * 5; i++) {
         newFeedback[i] = 'green';
       }
-  
+
       setFeedback(newFeedback);
       return;
     }
-  
-    // Initialize newFeedback for the current row
+
     const newFeedback = [...feedback];
     for (let i = row * 5; i < (row + 1) * 5; i++) {
       newFeedback[i] = '';
     }
-  
+
     const matchedIndices = Array(correctWord.length).fill(false);
-  
-    // Check for correct letters in the correct position (green)
+
     for (let i = 0; i < correctWord.length; i++) {
       if (guess[i] === correctWord[i]) {
         newFeedback[i + row * 5] = 'green';
         matchedIndices[i] = true;
       }
     }
-  
-    // Check for correct letters in the wrong position (orange)
+
     for (let i = 0; i < correctWord.length; i++) {
       if (!matchedIndices[i] && guess.includes(correctWord[i])) {
         const indexInGuess = guess.indexOf(correctWord[i]);
@@ -146,36 +125,52 @@ const handleRestart = () => {
         }
       }
     }
-  
-    // Check for letters not in the word (gray)
+
     for (let i = 0; i < guess.length; i++) {
       if (!matchedIndices[i] && !correctWord.includes(guess[i])) {
         newFeedback[i + row * 5] = '';
       }
     }
-  
+
     setFeedback(newFeedback);
-  
+
     if (guessCount + 1 < 5) {
-      // Only add a new row if all boxes in the current row are filled
       setGuesses([...guesses, ['', '', '', '', '']]);
       setGuessCount(guessCount + 1);
     } else {
-      // You've used all your guesses, game over
       setGameOver(true);
     }
   };
-  
-  
-  
+
   const handleKeyPress = (row, e) => {
     if (e.key === 'Enter') {
       handleSubmit(row);
     }
   };
 
+  useEffect(() => {
+    const starContainer = document.getElementById('stars-container');
+    const starCount = 100;
+
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+
+      const sizes = ['small', 'medium', 'large'];
+      star.classList.add(sizes[Math.floor(Math.random() * sizes.length)]);
+
+      star.style.left = `${Math.floor(Math.random() * 100)}vw`;
+      star.style.top = `${Math.floor(Math.random() * 100)}vh`;
+
+      star.style.animationDuration = `${Math.random() * 15 + 5}s`;
+
+      starContainer.appendChild(star);
+    }
+  }, []);
+
   return (
     <div className="game-menu">
+      <div id="stars-container"></div>
       <h1 className="title">
         Dash<span className="highlight">Words</span>
       </h1>
@@ -210,18 +205,16 @@ const handleRestart = () => {
               <div>
                 <p>Congratulations! You've won {points} points!</p>
                 {showConfetti && (
-  <Confetti
-    width={window.innerWidth}
-    height={600} // You can adjust the height as needed
-    numberOfPieces={400} // Increased the number of pieces to 400
-    recycle={false}
-    colors={['#FF5733', '#33FF57', '#5733FF']}
-    gravity={0.5}
-    wind={0} // Set wind to 0
-  />
-)}
-
-
+                  <Confetti
+                    width={window.innerWidth}
+                    height={600}
+                    numberOfPieces={400}
+                    recycle={false}
+                    colors={['#FF5733', '#33FF57', '#5733FF']}
+                    gravity={0.5}
+                    wind={0}
+                  />
+                )}
               </div>
             ) : (
               <p>Sorry, you lost. The word was: {selectedWord}</p>
@@ -260,4 +253,4 @@ const handleRestart = () => {
   );
 }
 
-export default GameMenu
+export default GameMenu;

@@ -1,30 +1,40 @@
-import React, { useContext, createContext } from 'react';
-import { getAuth, signInWithPopup, TwitterAuthProvider } from 'firebase/auth';
-import { app } from './firebase'; // Import your Firebase configuration
+import React, { useEffect } from 'react';
+import { getAuth, signInWithRedirect, TwitterAuthProvider, onAuthStateChanged } from 'firebase/auth';
+import { app } from './firebase';
+import { Redirect } from 'react-router-dom'; // Import Redirect from react-router-dom
 
-const AuthContext = createContext();
-
-export function AuthProvider({ children }) {
+function Authentication() {
   const auth = getAuth(app);
+  const [redirecting, setRedirecting] = useState(true); // State to track if redirecting
 
-  const handleTwitterLogin = async () => {
+  useEffect(() => {
     const provider = new TwitterAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      // Handle successful login
-    } catch (error) {
-      // Handle errors
-      console.error(error);
-    }
-  };
+    
+    // Initiate the redirect flow
+    signInWithRedirect(auth, provider);
 
-  const value = {
-    handleTwitterLogin,
-  };
+    // Handle the redirect result
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is authenticated, handle accordingly (e.g., redirect to home page)
+        console.log('User authenticated:', user);
+      } else {
+        // User not authenticated, handle accordingly (e.g., redirect to login page)
+        console.log('User not authenticated');
+      }
+      
+      // Stop redirecting
+      setRedirecting(false);
+    });
+  }, []);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  // Render a loading message while redirecting
+  if (redirecting) {
+    return <div>Redirecting...</div>;
+  }
+
+  // Optionally, you can redirect to a specific route after authentication
+  return <Redirect to="/home" />;
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export default Authentication;

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './StartMenu.css';
 import { getAuth, signInWithPopup, signOut, TwitterAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { app } from "./firebase"; // Import the initialized app instance
+import logo from './wordeez.png'; // Import the image
 
 function StartMenu() {
   const [user, setUser] = useState(null);
@@ -66,9 +67,9 @@ function StartMenu() {
 
   return (
     <div className="start-menu">
-      <h1 className="title">
-        Dash<span className="highlight">Words</span>
-      </h1>
+      {/* Replace the text title with the image logo */}
+      <img src={logo} alt="Logo" className="image-logo" />
+
       <div className="how-to-play-box">
         <h2>How to Play</h2>
         <div className="how-to-play-content">

@@ -5,7 +5,7 @@ import Leaderboard from './Leaderboard'; // Import the Leaderboard component
 import { useNavigate } from 'react-router-dom';
 import guessWordsArray from './GuessWords';
 import Confetti from 'react-confetti';
-
+import logo from './wordeez.png'; // Import the image
 
 function GameMenu() {
   const [selectedWord, setSelectedWord] = useState('');
@@ -27,6 +27,12 @@ function GameMenu() {
   }, []);
 
   const [submittedGuesses, setSubmittedGuesses] = useState([]);
+
+  function getRandomWord() {
+    const randomIndex = Math.floor(Math.random() * wordList.length);
+    return wordList[randomIndex].toUpperCase();
+  }
+  
 
   const handleInput = (row, index, value) => {
     if (!gameOver && !guesses.isSubmitted && row === guessCount) {
@@ -64,12 +70,16 @@ function GameMenu() {
   };
 
   const handleRestart = () => {
+    // Generate a new random word here (replace getRandomWord with your word generation logic)
+    const newWord = getRandomWord();
+  
     setGuesses([Array(5).fill('')]);
     setFeedback(Array(25).fill(''));
     setGuessCount(0);
     setGameOver(false);
     setShowConfetti(false);
-
+    setSelectedWord(newWord); // Set the new random word
+  
     inputRefs.current.forEach((row, rowIndex) => {
       row.forEach((inputRef, columnIndex) => {
         if (inputRef && rowIndex === 0) {
@@ -78,6 +88,7 @@ function GameMenu() {
       });
     });
   };
+  
 
   const handleSubmit = (row) => {
     if (gameOver || guesses[row].some((letter) => letter === '')) return;
@@ -172,9 +183,9 @@ function GameMenu() {
   return (
     <div className="game-menu">
       <div id="stars-container"></div>
-      <h1 className="title">
-        Dash<span className="highlight">Words</span>
-      </h1>
+      {/* Replace the text title with the image logo */}
+      <img src={logo} alt="Logo" className="image-logo" />
+
       <div className="word-grid">
         {guesses.map((guess, rowIndex) =>
           guess.map((letter, index) => (

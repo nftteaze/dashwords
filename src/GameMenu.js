@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import guessWordsArray from './GuessWords';
 import Confetti from 'react-confetti';
 
+
 function GameMenu() {
   const [selectedWord, setSelectedWord] = useState('');
   const [feedback, setFeedback] = useState(['', '', '', '', '']);

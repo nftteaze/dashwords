@@ -108,7 +108,7 @@ function GameMenu() {
     setGuesses([Array(5).fill('')]);
     setFeedback(Array(25).fill(''));
     setGuessCount(0);
-    setScore(0); // Reset the score to 0
+    setPoints(0); // Reset the points to 0
     setGameOver(false);
     setShowConfetti(false);
     setSelectedWord(newWord); // Set the new random word
@@ -123,7 +123,6 @@ function GameMenu() {
     });
   };
   
-   
 
   const handleSubmit = (row) => {
     console.log("Submitting guess for row:", row);

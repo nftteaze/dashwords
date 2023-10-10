@@ -1,78 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './StartMenu.css';
-import { getAuth, signInWithPopup, signOut, TwitterAuthProvider, onAuthStateChanged } from "firebase/auth";
-import { app } from "./firebase"; // Import the initialized app instance
-import { useFirebase } from './FirebaseContext'; // Import the useFirebase hook
-import logo from './wordeez.png'; // Import the image
+import {
+  getAuth,
+  signInWithPopup,
+  signOut,
+  TwitterAuthProvider,
+  onAuthStateChanged
+} from "firebase/auth";
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from 'firebase/firestore';
+import { app } from "./firebase";
+import { useFirebase } from './FirebaseContext';
+import logo from './wordeez.png';
 
 function StartMenu() {
-  const [user, setUser] = useState(null); // Define setUser using useState
-
-  const { signInWithTwitter, signOut } = useFirebase(); // Use the useFirebase hook
+  const [user, setUser] = useState(null);
+  const [userStats, setUserStats] = useState(null);
 
   useEffect(() => {
-    const starContainer = document.getElementById('stars-container');
-    const starCount = 50;
-
-    for (let i = 0; i < starCount; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-
-      // Set random initial position for stars
-      star.style.left = `${Math.floor(Math.random() * 100)}vw`;
-      star.style.top = `${Math.floor(Math.random() * 100)}vh`;
-
-      // Set random animation duration and delay for stars
-      star.style.animationDuration = `${Math.random() * 10 + 5}s`; // Random duration between 5s and 15s
-      star.style.animationDelay = `${Math.random() * 5}s`; // Random delay between 0s and 5s
-
-      starContainer.appendChild(star);
-    }
-
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Check if the user is already authenticated
-    onAuthStateChanged(auth, (currentUser) => {
+    onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        // User is signed in, set the user state
         setUser(currentUser);
+        const userDocRef = doc(db, 'users', currentUser.uid);
+
+        try {
+          const userDocSnap = await getDoc(userDocRef);
+          if (userDocSnap.exists()) {
+            setUserStats(userDocSnap.data());
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      } else {
+        setUser(null);
+        setUserStats(null);
       }
     });
-  }, []);
+  }, []);  
 
   const handleTwitterLogin = async () => {
-    console.log('Initiating Twitter login...');
     const auth = getAuth(app);
     const provider = new TwitterAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      // Handle successful login
       setUser(result.user);
       console.log('Login successful!');
     } catch (error) {
-      // Handle errors, log detailed error message
       console.error('Error during Twitter login:', error);
     }
   };
 
   const handleSignOut = async () => {
-    console.log('Signing out...');
     const auth = getAuth(app);
     try {
       await signOut(auth);
-      // Handle successful sign-out
       setUser(null);
       console.log('Sign-out successful!');
     } catch (error) {
-      // Handle errors, log detailed error message
       console.error('Error during sign-out:', error);
     }
   };
 
   return (
     <div className="start-menu">
-      {/* Replace the text title with the image logo */}
       <img src={logo} alt="Logo" className="image-logo" />
 
       <div className="how-to-play-box">
@@ -98,10 +95,10 @@ function StartMenu() {
           {user && (
             <div className="user-stats">
               <h3>User Stats</h3>
-              <p>Highest Score: {user.highestScore || 0}</p>
-              <p>Total Games Played: {user.totalGamesPlayed || 0}</p>
-              <p>Total Points: {user.totalPoints || 0}</p>
-              <p>Win Streak: {user.winStreak || 0}</p>
+              <p>Highest Score: {userStats?.highestScore || 0}</p>
+              <p>Total Games Played: {userStats?.totalGamesPlayed || 0}</p>
+              <p>Total Points: {userStats?.totalPoints || 0}</p>
+              <p>Win Streak: {userStats?.winStreak || 0}</p>
             </div>
           )}
           <p>Can you guess the word and earn the highest score?</p>

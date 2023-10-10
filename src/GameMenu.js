@@ -53,6 +53,7 @@ function GameMenu() {
         totalPoints: user?.totalPoints ? user?.totalPoints + points : points,
         winStreak: gameOver ? 0 : user?.winStreak ? user?.winStreak + 1 : 1,
       };
+      
 
       console.log('User Data to be updated:', userData);
 

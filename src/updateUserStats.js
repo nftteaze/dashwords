@@ -1,23 +1,33 @@
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { app } from './firebase'; // Import the initialized Firebase app
 
 const db = getFirestore(app);
 
 // Function to update user data in the Firestore collection
-const updateUserStats = async (userId, userData) => {
+const updateUserStats = async (userId, newGameData) => {
   const userRef = doc(collection(db, 'users'), userId);
 
-  console.log('Updating user data for user ID:', userId);
-  console.log('User data to be updated:', userData);
-
   try {
-    // Check if userData.highestScore is undefined or null, if so, set it to 0
-    if (userData.highestScore === undefined || userData.highestScore === null) {
-      userData.highestScore = 0;
-    }
+    // Get existing user data from Firestore
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
 
-    await setDoc(userRef, userData, { merge: true }); // Use merge option to merge with existing data
-    console.log('User data updated successfully:', userData);
+      // Merge existing user data with new game data
+      const updatedUserData = {
+        highestScore: Math.max(userData.highestScore || 0, newGameData.highestScore || 0),
+        totalGamesPlayed: (userData.totalGamesPlayed || 0) + 1,
+        totalPoints: (userData.totalPoints || 0) + newGameData.totalPoints,
+        winStreak: Math.max(userData.winStreak || 0, newGameData.winStreak || 0),
+      };
+
+      // Update the user data in Firestore
+      await setDoc(userRef, updatedUserData, { merge: true });
+      console.log('User data updated successfully:', updatedUserData);
+    } else {
+      // Handle the case where the user document does not exist
+      console.error('User document not found for ID:', userId);
+    }
   } catch (error) {
     console.error('Error updating user data:', error);
     throw error; // Re-throw the error to handle it where updateUserStats is called

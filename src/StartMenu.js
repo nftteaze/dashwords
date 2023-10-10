@@ -95,6 +95,15 @@ function StartMenu() {
               <span className="tile green"></span> - Correct character in the correct position
             </li>
           </ul>
+          {user && (
+            <div className="user-stats">
+              <h3>User Stats</h3>
+              <p>Highest Score: {user.highestScore || 0}</p>
+              <p>Total Games Played: {user.totalGamesPlayed || 0}</p>
+              <p>Total Points: {user.totalPoints || 0}</p>
+              <p>Win Streak: {user.winStreak || 0}</p>
+            </div>
+          )}
           <p>Can you guess the word and earn the highest score?</p>
         </div>
       </div>

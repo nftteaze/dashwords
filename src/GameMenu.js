@@ -18,6 +18,7 @@ function GameMenu() {
   const [gameOver, setGameOver] = useState(false);
   const [points, setPoints] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [score, setScore] = useState(0);
 
   const inputRefs = useRef([]);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -96,18 +97,23 @@ function GameMenu() {
     }
   };
 
+  
+
   const handleRestart = () => {
     console.log("Restarting game...");
     // Generate a new random word here (replace getRandomWord with your word generation logic)
     const newWord = getRandomWord();
   
+    // Reset all game-related state variables to their initial values
     setGuesses([Array(5).fill('')]);
     setFeedback(Array(25).fill(''));
     setGuessCount(0);
+    setScore(0); // Reset the score to 0
     setGameOver(false);
     setShowConfetti(false);
     setSelectedWord(newWord); // Set the new random word
   
+    // Clear input values
     inputRefs.current.forEach((row, rowIndex) => {
       row.forEach((inputRef, columnIndex) => {
         if (inputRef && rowIndex === 0) {
@@ -116,6 +122,7 @@ function GameMenu() {
       });
     });
   };
+  
    
 
   const handleSubmit = (row) => {

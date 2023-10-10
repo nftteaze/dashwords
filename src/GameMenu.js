@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import './GameMenu.css';
 import wordList from './wordList';
-import Leaderboard from './Leaderboard'; // Import the Leaderboard component
+import Leaderboard from './Leaderboard';
 import { useNavigate } from 'react-router-dom';
 import guessWordsArray from './GuessWords';
 import Confetti from 'react-confetti';
-import logo from './wordeez.png'; // Import the image
+import logo from './wordeez.png';
+import { useFirebase } from './FirebaseContext'; // Importing useFirebase hook from FirebaseContext
+import updateUserStats from './updateUserStats';
 
 function GameMenu() {
+  const { user } = useFirebase(); // Using the useFirebase hook
   const [selectedWord, setSelectedWord] = useState('');
   const [feedback, setFeedback] = useState(['', '', '', '', '']);
   const [guesses, setGuesses] = useState([['', '', '', '', '']]);
@@ -21,10 +24,13 @@ function GameMenu() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Game Over:", gameOver);
+    console.log("Points:", points);
+    console.log("User Data:", user);
     const randomIndex = Math.floor(Math.random() * wordList.length);
     const randomWord = wordList[randomIndex].toUpperCase();
     setSelectedWord(randomWord);
-  }, []);
+  }, [user]); // Added user as a dependency to re-run the effect when user changes
 
   const [submittedGuesses, setSubmittedGuesses] = useState([]);
 
@@ -32,9 +38,30 @@ function GameMenu() {
     const randomIndex = Math.floor(Math.random() * wordList.length);
     return wordList[randomIndex].toUpperCase();
   }
-  
 
+  useEffect(() => {
+    console.log('Game Over:', gameOver);
+    console.log('Points:', points);
+    console.log('User Data:', user);
+
+    if (gameOver && user) {
+      console.log('Updating user stats...');
+      const userData = {
+        highestScore: points > user?.highestScore ? points : user?.highestScore,
+        totalGamesPlayed: user?.totalGamesPlayed ? user?.totalGamesPlayed + 1 : 1,
+        totalPoints: user?.totalPoints ? user?.totalPoints + points : points,
+        winStreak: gameOver ? 0 : user?.winStreak ? user?.winStreak + 1 : 1,
+      };
+
+      console.log('User Data to be updated:', userData);
+
+      // Call the updateUserStats function with the user's ID and updated data
+      updateUserStats(user.uid, userData);
+    }
+}, [gameOver, points, user]);
+  
   const handleInput = (row, index, value) => {
+    console.log("Handling input for row:", row, "index:", index, "value:", value);
     if (!gameOver && !guesses.isSubmitted && row === guessCount) {
       const newGuesses = [...guesses];
       const newInput = [...guesses[row]];
@@ -70,6 +97,7 @@ function GameMenu() {
   };
 
   const handleRestart = () => {
+    console.log("Restarting game...");
     // Generate a new random word here (replace getRandomWord with your word generation logic)
     const newWord = getRandomWord();
   
@@ -88,9 +116,11 @@ function GameMenu() {
       });
     });
   };
-  
+   
 
   const handleSubmit = (row) => {
+    console.log("Submitting guess for row:", row);
+    console.log("Guesses:", guesses);
     if (gameOver || guesses[row].some((letter) => letter === '')) return;
     const guess = guesses[row].join('').toUpperCase();
     const correctWord = selectedWord;

@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import './StartMenu.css';
 import { getAuth, signInWithPopup, signOut, TwitterAuthProvider, onAuthStateChanged } from "firebase/auth";
 import { app } from "./firebase"; // Import the initialized app instance
+import { useFirebase } from './FirebaseContext'; // Import the useFirebase hook
 import logo from './wordeez.png'; // Import the image
 
 function StartMenu() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Define setUser using useState
+
+  const { signInWithTwitter, signOut } = useFirebase(); // Use the useFirebase hook
 
   useEffect(() => {
     const starContainer = document.getElementById('stars-container');
@@ -39,6 +42,7 @@ function StartMenu() {
   }, []);
 
   const handleTwitterLogin = async () => {
+    console.log('Initiating Twitter login...');
     const auth = getAuth(app);
     const provider = new TwitterAuthProvider();
     try {
@@ -53,6 +57,7 @@ function StartMenu() {
   };
 
   const handleSignOut = async () => {
+    console.log('Signing out...');
     const auth = getAuth(app);
     try {
       await signOut(auth);

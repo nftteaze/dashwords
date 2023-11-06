@@ -1,16 +1,11 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import './GameMenu.css';
 import wordList from './wordList';
-import Leaderboard from './Leaderboard';
 import { useNavigate } from 'react-router-dom';
 import guessWordsArray from './GuessWords';
 import Confetti from 'react-confetti';
-import logo from './wordeez.png';
-import { useFirebase } from './FirebaseContext'; // Importing useFirebase hook from FirebaseContext
-import updateUserStats from './updateUserStats';
 
 function GameMenu() {
-  const { user } = useFirebase(); // Using the useFirebase hook
   const [selectedWord, setSelectedWord] = useState('');
   const [feedback, setFeedback] = useState(['', '', '', '', '']);
   const [guesses, setGuesses] = useState([['', '', '', '', '']]);
@@ -18,49 +13,22 @@ function GameMenu() {
   const [gameOver, setGameOver] = useState(false);
   const [points, setPoints] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [score, setScore] = useState(0);
+
 
   const inputRefs = useRef([]);
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Game Over:", gameOver);
-    console.log("Points:", points);
-    console.log("User Data:", user);
     const randomIndex = Math.floor(Math.random() * wordList.length);
     const randomWord = wordList[randomIndex].toUpperCase();
     setSelectedWord(randomWord);
-  }, [user]); // Added user as a dependency to re-run the effect when user changes
-
-  const [submittedGuesses, setSubmittedGuesses] = useState([]);
+  }, []);
 
   function getRandomWord() {
     const randomIndex = Math.floor(Math.random() * wordList.length);
     return wordList[randomIndex].toUpperCase();
   }
 
-  useEffect(() => {
-    console.log('Game Over:', gameOver);
-    console.log('Points:', points);
-    console.log('User Data:', user);
-
-    if (gameOver && user) {
-      console.log('Updating user stats...');
-      const userData = {
-        highestScore: points > user?.highestScore ? points : user?.highestScore,
-        totalGamesPlayed: user?.totalGamesPlayed ? user?.totalGamesPlayed + 1 : 1,
-        totalPoints: user?.totalPoints ? user?.totalPoints + points : points,
-        winStreak: gameOver ? 0 : user?.winStreak ? user?.winStreak + 1 : 1,
-      };
-      
-
-      console.log('User Data to be updated:', userData);
-
-      // Call the updateUserStats function with the user's ID and updated data
-      updateUserStats(user.uid, userData);
-    }
-}, [gameOver, points, user]);
   
   const handleInput = (row, index, value) => {
     console.log("Handling input for row:", row, "index:", index, "value:", value);
@@ -97,8 +65,6 @@ function GameMenu() {
       }
     }
   };
-
-  
 
   const handleRestart = () => {
     console.log("Restarting game...");
@@ -217,11 +183,15 @@ function GameMenu() {
     }
   }, []);
 
-  return (
-    <div className="game-menu">
-      <div id="stars-container"></div>
-      {/* Replace the text title with the image logo */}
-      <img src={logo} alt="Logo" className="image-logo" />
+  
+    return (
+      <div className="game-menu">
+        <div className="stars" id="stars-container"></div>
+  
+        <div className="title">
+          <span className="dash">Dash</span>
+          <span className="words">Words</span>
+        </div>
 
       <div className="word-grid">
         {guesses.map((guess, rowIndex) =>
@@ -252,7 +222,8 @@ function GameMenu() {
           <div>
             {points > 0 ? (
               <div>
-                <p>Congratulations! You've won {points} points!</p>
+                <p>Congratulations!</p>
+          <p>You've won {points} Coins!</p>
                 {showConfetti && (
                   <Confetti
                     width={window.innerWidth}
@@ -268,20 +239,14 @@ function GameMenu() {
             ) : (
               <p>Sorry, you lost. The word was: {selectedWord}</p>
             )}
-            <button className="restart-button" onClick={handleRestart}>
+            <button className="button" onClick={handleRestart}>
               Restart
-            </button>
-            <button
-              className="leaderboard-button"
-              onClick={() => navigate('/leaderboard')}
-            >
-              Leaderboard
             </button>
           </div>
         ) : (
           <div>
             <button
-              className="submit-button"
+              className="button"
               onClick={() => {
                 const lastGuess = guesses[guesses.length - 1];
                 if (lastGuess.every((letter) => letter !== '')) {

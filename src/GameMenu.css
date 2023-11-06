@@ -1,5 +1,7 @@
-.image-logo {
-  width: 200px; /* Set the width of the image */
+.coin-logo {
+  width: 50px; /* Set the width of the coin logo */
+  height: auto; /* Maintain aspect ratio */
+  margin-top: 10px; /* Adjust the margin-top value to position the logo */
 }
 
 .game-menu {
@@ -39,11 +41,9 @@ input {
   border: none;
 }
 
-.restart-button,
-.submit-button,
-.start-button {
+.button {
   margin-top: 20px;
-  margin-bottom: 20px; /* Added margin to create space between buttons */
+  margin-bottom: 20px;
   padding: 10px 20px;
   font-size: 1.5rem;
   color: rgb(2, 2, 2);
@@ -51,13 +51,10 @@ input {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  position: relative;
 }
 
-/* Add a hover effect for the restart, submit, and start buttons */
-.restart-button:hover,
-.submit-button:hover,
-.start-button:hover {
+/* Button hover effect */
+.button:hover {
   background-color: #1B9A76;
 }
 

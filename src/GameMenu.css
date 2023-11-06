@@ -4,6 +4,11 @@
   margin-top: 10px; /* Adjust the margin-top value to position the logo */
 }
 
+.winning-message {
+  font-size: 1.2rem; /* Adjust the font size as per your preference */
+  color: gold; /* Set the text color to gold */
+}
+
 .game-menu {
   display: flex;
   flex-direction: column;

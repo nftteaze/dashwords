@@ -105,7 +105,29 @@ function GameMenu() {
 
     if (guess === correctWord) {
       setGameOver(true);
-      setPoints((5 - guessCount) * 5);
+  
+      let earnedPoints = 0;
+      switch (guessCount) {
+        case 0:
+          earnedPoints = 1000;
+          break;
+        case 1:
+          earnedPoints = 500;
+          break;
+        case 2:
+          earnedPoints = 100;
+          break;
+        case 3:
+          earnedPoints = 50;
+          break;
+        case 4:
+          earnedPoints = 25;
+          break;
+        default:
+          earnedPoints = 0;
+      }
+  
+      setPoints(earnedPoints);
       setShowConfetti(true);
 
       const newFeedback = [...feedback];
@@ -223,7 +245,7 @@ function GameMenu() {
             {points > 0 ? (
               <div>
                 <p>Congratulations!</p>
-          <p>You've won {points} Coins!</p>
+          <p>You've won <span className="winning-message">{points} Coins!</span></p>
                 {showConfetti && (
                   <Confetti
                     width={window.innerWidth}

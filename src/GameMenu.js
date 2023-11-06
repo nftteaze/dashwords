@@ -210,7 +210,7 @@ function GameMenu() {
       <div className="game-menu">
         <div className="stars" id="stars-container"></div>
   
-        <div className="title">
+        <div className="game-title">
           <span className="dash">Dash</span>
           <span className="words">Words</span>
         </div>
